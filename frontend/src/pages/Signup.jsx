@@ -13,7 +13,7 @@ const Signup = () => {
       try {
           console.log('Form being sent:', form);
 
-        const response = await fetch('http://localhost:9000/signup', {
+        const response = await fetch('http://localhost:8080/signup', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

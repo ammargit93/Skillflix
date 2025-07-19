@@ -68,7 +68,7 @@ def signup(user: SignupRequest):
         db.close()
         raise HTTPException(status_code=400, detail="Username already exists")
 
-    new_user = User(username=user.username, password=user.password)
+    new_user = User(username=user.username, password=user.password, favorite_course_id=None)
 
     db.add(new_user)
     db.commit()
