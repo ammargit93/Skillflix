@@ -2,13 +2,21 @@ package com.example.skillflix.config;
 
 import com.example.skillflix.domain.UserEntity;
 import com.example.skillflix.domain.VideoEntity;
+import com.example.skillflix.repository.UserRepository;
+import com.example.skillflix.repository.VideoRepository;
+import com.example.skillflix.services.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+
+import java.util.Optional;
 
 @Configuration
-public class WebConfig {
+public class Config {
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
@@ -33,4 +41,14 @@ public class WebConfig {
     public UserEntity userIniter(){
         return new UserEntity();
     }
+
+    @Bean
+    public S3Client s3Client() {
+        return S3Client.builder()
+                .region(Region.AP_SOUTH_1)  // e.g., Mumbai
+                .credentialsProvider(DefaultCredentialsProvider.create())
+                .build();
+    }
+
+
 }

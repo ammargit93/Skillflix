@@ -14,28 +14,26 @@ const Login = () => {
 
     try {
         console.log(form)
-      const response = await fetch('http://localhost:9000/login', {
+      const response = await fetch('http://localhost:8080/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(form),
       });
-
       const data = await response.json();
-
+       console.log(data)
       if (!response.ok) {
         throw new Error(data.detail || 'Login failed');
       }
 
-      localStorage.setItem('user_id', data.user_id);
+      localStorage.setItem('user_id', data.id);
       localStorage.setItem('username', data.username);
-      localStorage.setItem('password', data.password); // ⚠️ Not for production use
+      localStorage.setItem('password', data.password);
 
       alert('Login successful!');
       navigate('/home')
-      // Optional redirect:
-      // window.location.href = '/dashboard';
+
 
     } catch (error) {
       console.error('Login error:', error.message);

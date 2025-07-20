@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const Profile = () => {
   const [showForm, setShowForm] = useState(false);
@@ -7,6 +7,7 @@ const Profile = () => {
     description: '',
     video: null
   });
+  const [userVideos, setUserVideos] = useState([]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -23,8 +24,8 @@ const Profile = () => {
     formData.append("title", form.title);
     formData.append("description", form.description);
     formData.append("video", form.video);
-    formData.append("user_id",localStorage.getItem("user_id"));
-    formData.append("username",localStorage.getItem("username"));
+    formData.append("user_id", localStorage.getItem("user_id"));
+    formData.append("username", localStorage.getItem("username"));
 
     try {
       const response = await fetch("http://localhost:8080/upload", {
@@ -42,19 +43,36 @@ const Profile = () => {
 
       setShowForm(false);
       setForm({ title: '', description: '', video: null });
+
+      // Refresh the video list
+      fetchVideos();
     } catch (error) {
       alert("Upload failed: " + error.message);
       console.error(error);
     }
   };
 
+  const fetchVideos = async () => {
+    try {
+      const userId = localStorage.getItem("user_id");
+      const response = await fetch(`http://localhost:8080/get-user-videos?user_id=${userId}`);
+      const data = await response.json();
+      setUserVideos(data);
+    } catch (err) {
+      console.error("Error fetching user videos:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchVideos();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white p-8 relative">
       <h1 className="text-3xl font-bold mb-4">Welcome to Your Profile</h1>
       <p className="text-gray-400 mb-8">Here you can upload and manage your skill videos.</p>
 
-      {/* Upload Button (Fixed Bottom Left) */}
+      {/* Upload Button */}
       <button
         onClick={() => setShowForm(true)}
         className="fixed bottom-6 left-6 px-5 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg shadow-lg hover:brightness-110 transition"
@@ -118,8 +136,36 @@ const Profile = () => {
           </div>
         </div>
       )}
+
+      {/* User Videos Display Section */}
+      <div className="mt-12">
+        <h2 className="text-2xl font-bold mb-4">Your Videos</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {userVideos.length === 0 ? (
+            <p className="text-gray-400">You haven’t uploaded any videos yet.</p>
+          ) : (
+            userVideos.map((video) => (
+              <div
+                key={video.videoId}
+                className="bg-gray-800 rounded-xl shadow-md p-4 border border-gray-700"
+              >
+                <h3 className="text-lg font-semibold mb-2">{video.videoTitle}</h3>
+                <p className="text-sm text-gray-400 mb-3">{video.videoDescription}</p>
+                <video
+                  controls
+                  src={video.s3Url}
+                  className="w-full h-48 rounded-md"
+                />
+              </div>
+            ))
+          )}
+        </div>
+      </div>
     </div>
   );
 };
 
 export default Profile;
+
+
+
