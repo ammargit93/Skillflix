@@ -114,14 +114,12 @@ const HomePage = () => {
                   <span>Uploaded by: {video.uploadedBy?.username || 'Unknown'}</span>
                 </div>
                 <div className="mt-3 flex space-x-2">
-                  <a
-                    href={video.s3Url}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <Link
+                    to={`/watch/${video.videoId}`}
                     className="inline-block px-3 py-1.5 bg-pink-600 hover:bg-pink-700 rounded-lg text-xs font-medium"
                   >
                     Watch Now
-                  </a>
+                  </Link>
                   <button
                     className="inline-block px-3 py-1.5 border border-pink-600 text-pink-400 hover:bg-pink-600 hover:text-white rounded-lg text-xs font-medium"
                     disabled
