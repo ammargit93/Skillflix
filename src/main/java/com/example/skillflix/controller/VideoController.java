@@ -20,14 +20,12 @@ import java.util.UUID;
 @RestController
 public class VideoController {
 
-    private VideoEntity video;
     private UserRepository userRepository;
     private VideoRepository videoRepository;
     private VideoService videoService;
 
     public VideoController(VideoEntity video, UserRepository userRepository,VideoService videoService)
     {
-        this.video = video;
         this.videoService = videoService;
         this.userRepository = userRepository;
     }
@@ -42,6 +40,9 @@ public class VideoController {
         log.info("Video: "+videoTitle);
         log.info("Video id: "+videoDescription);
         String videoId = UUID.randomUUID().toString();
+
+        VideoEntity video = new VideoEntity();
+
         video.setVideoId(videoId);
         video.setVideoTitle(videoTitle);
         video.setVideoDescription(videoDescription);

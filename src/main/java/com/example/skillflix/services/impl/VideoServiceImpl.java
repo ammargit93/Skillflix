@@ -56,14 +56,7 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     public List<VideoEntity> findVideosById(String userId){
-        List<VideoEntity> userVideos = new ArrayList<>();
-        Iterable<VideoEntity> results = videoRepository.findAll();
-        for(VideoEntity video: results){
-            if(video.getUploadedBy().getId().equals(userId)){
-                userVideos.add(video);
-            }
-        }
-        return userVideos;
+        return videoRepository.findByUploadedBy_Id(userId);
     }
 
     @Override

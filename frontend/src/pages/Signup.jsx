@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 const Signup = () => {
   const [form, setForm] = useState({ username: '', password: '' });
-
+  const navigate = useNavigate();
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -27,6 +27,7 @@ const Signup = () => {
           throw new Error(data.detail || 'Signup failed');
         }
         alert('Signup successful!');
+        navigate('/login');
       } catch (error) {
         console.error('Signup error:', error.message);
         alert('Signup failed: ' + error.message);

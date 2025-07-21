@@ -28,7 +28,7 @@ const LandingPage = () => {
           Skillflix is your go-to platform to learn tech, business, design, and more — taught by industry experts.
         </p>
         <a
-          href="#"
+          href="/login"
           className="inline-block px-8 py-4 bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 hover:brightness-110 rounded-xl shadow-lg text-lg font-semibold transition"
         >
           Explore Courses
