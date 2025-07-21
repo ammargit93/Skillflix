@@ -15,4 +15,6 @@ public interface VideoService {
     String uploadToS3(MultipartFile videoContent, String videoId, String userId) throws IOException;
 
     List<VideoEntity> findAllVideos();
+
+    VideoEntity findVideoById(String videoId);
 }

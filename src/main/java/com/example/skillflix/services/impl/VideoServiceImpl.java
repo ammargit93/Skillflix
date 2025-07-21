@@ -59,6 +59,12 @@ public class VideoServiceImpl implements VideoService {
         return videoRepository.findByUploadedBy_Id(userId);
     }
 
+    public VideoEntity findVideoById(String videoId) {
+        return videoRepository.findById(videoId)
+                .orElseThrow(() -> new RuntimeException("Video not found with ID: " + videoId));
+    }
+
+
     @Override
     public List<VideoEntity> findAllVideos(){
         List<VideoEntity> allVideos = new ArrayList<>();

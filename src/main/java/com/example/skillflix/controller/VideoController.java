@@ -24,8 +24,7 @@ public class VideoController {
     private VideoRepository videoRepository;
     private VideoService videoService;
 
-    public VideoController(VideoEntity video, UserRepository userRepository,VideoService videoService)
-    {
+    public VideoController(VideoEntity video, UserRepository userRepository,VideoService videoService){
         this.videoService = videoService;
         this.userRepository = userRepository;
     }

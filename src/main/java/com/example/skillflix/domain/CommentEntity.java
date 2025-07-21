@@ -19,14 +19,12 @@ public class CommentEntity {
     @Id
     private String commentId;
 
-    private String commentTitle;
-
     private String commentContent;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "video_id", referencedColumnName = "videoId")
     @JsonIgnoreProperties({"password", "hibernateLazyInitializer", "handler"})
-    private VideoEntity videos;
+    private VideoEntity video;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
