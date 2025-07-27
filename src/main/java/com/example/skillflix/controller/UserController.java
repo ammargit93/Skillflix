@@ -7,10 +7,7 @@ import com.example.skillflix.services.impl.UserServiceImpl;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.extern.java.Log;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
@@ -66,4 +63,12 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping(value = "/health")
+    public ResponseEntity<?> getHealth(){
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("health", "Healthy");
+
+        return ResponseEntity.ok(response);
+    }
 }

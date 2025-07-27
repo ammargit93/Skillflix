@@ -1,16 +1,72 @@
+#version: '3.8'
+#
+#services:
+#  db:
+#    image: postgres
+#    container_name: skillflix-db
+#    restart: always
+#    ports:
+#      - "5432:5432"
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: changemeinprod!
+#      POSTGRES_DB: skillflix_db
+#    networks:
+#      - container-net
+#
+#networks:
+#  container-net:
+#    driver: bridge
+
+
 version: '3.8'
 
 services:
-
-  db:
-    image: postgres
-    container_name: skillflix-db
-    restart: always
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: .
+    container_name: springboot-backend
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: changemeinprod!
-      POSTGRES_DB: skillflix_db
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/mydatabase
+      SPRING_DATASOURCE_USERNAME: myuser
+      SPRING_DATASOURCE_PASSWORD: mypassword
+      AWS_ACCESS_KEY_ID: your-access-key
+      AWS_SECRET_ACCESS_KEY: your-secret-key
+      AWS_REGION: your-region
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
 
+  frontend:
+    build:
+      context: ./frontend
+    container_name: react-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
 
+volumes:
+  pgdata:
+
+networks:
+  app-network:

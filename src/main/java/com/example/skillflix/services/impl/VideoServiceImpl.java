@@ -8,6 +8,7 @@ import com.example.skillflix.services.VideoService;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import redis.clients.jedis.UnifiedJedis;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -26,9 +27,13 @@ public class VideoServiceImpl implements VideoService {
     private VideoRepository videoRepository;
     private final S3Client s3Client;
 
+    private UnifiedJedis jedis;
+
     public VideoServiceImpl(S3Client s3Client, VideoRepository videoRepository){
         this.s3Client = s3Client;
         this.videoRepository = videoRepository;
+        jedis = new UnifiedJedis("redis://localhost:6379");
+
     }
 
     @Override
@@ -67,9 +72,13 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     public List<VideoEntity> findAllVideos(){
+
         List<VideoEntity> allVideos = new ArrayList<>();
         Iterable<VideoEntity> results = videoRepository.findAll();
         for(VideoEntity video: results){
+//            if(!jedis.exists("video:"+video.getVideoId())){
+//                jedis.set("video:"+video.getVideoId(), video);
+//            }
             allVideos.add(video);
         }
         return allVideos;

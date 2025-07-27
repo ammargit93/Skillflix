@@ -61,6 +61,7 @@ public class VideoController {
     }
 
     @GetMapping(value="/get-all-videos")
+
     public List<VideoEntity> getAllVideos(){
         return videoService.findAllVideos();
     }
