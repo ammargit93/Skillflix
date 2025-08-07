@@ -11,8 +11,6 @@ const LandingPage = () => {
         </h1>
         <nav className="space-x-6 text-gray-300 font-medium">
           <a href="#" className="hover:text-white transition">Courses</a>
-          <a href="#" className="hover:text-white transition">About</a>
-          <a href="#" className="hover:text-white transition">Contact</a>
           <Link to="/signup" className="px-4 py-2 bg-pink-600 hover:bg-pink-700 rounded-lg text-white font-semibold transition">
             Sign Up
           </Link>
