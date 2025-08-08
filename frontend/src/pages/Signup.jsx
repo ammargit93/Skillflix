@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {API_BASE_URL} from './constants/constants.js';
+
 const Signup = () => {
   const [form, setForm] = useState({ username: '', password: '' });
   const navigate = useNavigate();
@@ -13,7 +15,7 @@ const Signup = () => {
       try {
           console.log('Form being sent:', form);
 
-        const response = await fetch('http://localhost:8080/signup', {
+        const response = await fetch(API_BASE_URL+'/signup', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

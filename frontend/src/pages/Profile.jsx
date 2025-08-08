@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import {API_BASE_URL} from './constants/constants.js';
 
 const Profile = () => {
   const [showForm, setShowForm] = useState(false);
@@ -28,7 +29,7 @@ const Profile = () => {
     formData.append("username", localStorage.getItem("username"));
 
     try {
-      const response = await fetch("http://localhost:8080/upload", {
+      const response = await fetch(API_BASE_URL+"/upload", {
         method: "POST",
         body: formData,
       });
@@ -55,7 +56,7 @@ const Profile = () => {
   const fetchVideos = async () => {
     try {
       const userId = localStorage.getItem("user_id");
-      const response = await fetch(`http://localhost:8080/get-user-videos?user_id=${userId}`);
+      const response = await fetch(API_BASE_URL+`/get-user-videos?user_id=${userId}`);
       const data = await response.json();
       setUserVideos(data);
     } catch (err) {

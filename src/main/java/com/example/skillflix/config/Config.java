@@ -25,7 +25,7 @@ public class Config {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000")
+                        .allowedOrigins("http://localhost:5173","https://skillflixui.netlify.app")
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedHeaders("*")
                         .allowCredentials(true);
@@ -46,7 +46,7 @@ public class Config {
     @Bean
     public S3Client s3Client() {
         return S3Client.builder()
-                .region(Region.AP_SOUTH_1)  // e.g., Mumbai
+                .region(Region.AP_SOUTH_1)
                 .credentialsProvider(DefaultCredentialsProvider.create())
                 .build();
     }

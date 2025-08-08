@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import {API_BASE_URL} from './constants/constants.js';
 
 const HomePage = () => {
   const username = localStorage.getItem("username");
@@ -13,7 +14,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const response = await fetch('http://localhost:8080/get-all-videos');
+        const response = await fetch(API_BASE_URL+'/get-all-videos');
         if (!response.ok) {
           throw new Error('Failed to fetch videos');
         }

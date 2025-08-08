@@ -11,20 +11,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Log
 @RestController
 public class VideoController {
 
     private UserRepository userRepository;
-    private VideoRepository videoRepository;
     private VideoService videoService;
 
-    public VideoController(VideoEntity video, UserRepository userRepository,VideoService videoService){
+    public VideoController(UserRepository userRepository,VideoService videoService){
         this.videoService = videoService;
         this.userRepository = userRepository;
     }
@@ -60,10 +56,33 @@ public class VideoController {
         return userVideos;
     }
 
-    @GetMapping(value="/get-all-videos")
 
+    @GetMapping(value="/get-all-videos")
     public List<VideoEntity> getAllVideos(){
         return videoService.findAllVideos();
     }
 
+    @PostMapping(value="/handle-reaction")
+    public Map<String,Object> handleReaction(@RequestBody Map<String,Object> requestBody){
+        VideoEntity video = videoService.findVideoById((String) requestBody.get("video_id"));
+        if(requestBody.get("reaction_type").equals("like")){
+            video.setLikes(video.getLikes()+1);
+        }else{
+            video.setDislikes(video.getDislikes()+1);
+        }
+        videoService.save(video);
+        Map<String, Object> map = new HashMap<String,Object>();
+        map.put("likes",video.getLikes());
+        map.put("dislikes",video.getDislikes());
+        map.put("video_id",video.getVideoId());
+        return map;
+    }
+
+    @GetMapping(value="/get-reactions")
+    public VideoEntity getReactionForVideo(
+            @RequestParam("video_id") String videoId
+    ){
+        VideoEntity video = videoService.findVideoById(videoId);
+        return video;
+    }
 }

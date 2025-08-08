@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { API_BASE_URL } from './constants/constants.js';
 
 const WatchPage = () => {
   const { videoId } = useParams();
@@ -8,11 +9,14 @@ const WatchPage = () => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [showComments, setShowComments] = useState(true);
-  const [currentUser, setCurrentUser] = useState(null); // You'll need to get this from your auth system
+  const [currentUser, setCurrentUser] = useState(null);
+  const [likes, setLikes] = useState(0);
+  const [dislikes, setDislikes] = useState(0);
+  const [userReaction, setUserReaction] = useState(null); // 'like' or 'dislike'
 
   useEffect(() => {
     const fetchVideos = async () => {
-      const res = await fetch("http://localhost:8080/get-all-videos");
+      const res = await fetch(API_BASE_URL + "/get-all-videos");
       const data = await res.json();
       setVideos(data);
       const main = data.find(v => v.videoId === videoId);
@@ -20,13 +24,32 @@ const WatchPage = () => {
     };
 
     const fetchComments = async () => {
-      const res = await fetch(`http://localhost:8080/get-comments-by-video?video_id=${videoId}`);
+      const res = await fetch(API_BASE_URL + `/get-comments-by-video?video_id=${videoId}`);
       const data = await res.json();
       setComments(data);
     };
 
+    const fetchReactions = async () => {
+      try {
+        const res = await fetch(API_BASE_URL + `/get-video-reactions?video_id=${videoId}`);
+        const data = await res.json();
+        setLikes(data.likes || 0);
+        setDislikes(data.dislikes || 0);
+
+        const storedUserId = localStorage.getItem("user_id");
+        if (storedUserId) {
+          const userRes = await fetch(API_BASE_URL + `/get-user-reaction?video_id=${videoId}&user_id=${storedUserId}`);
+          const userData = await userRes.json();
+          setUserReaction(userData.reaction);
+        }
+      } catch (error) {
+        console.error("Error fetching reactions:", error);
+      }
+    };
+
     fetchVideos();
     fetchComments();
+
     const storedUserId = localStorage.getItem("user_id");
     const storedUsername = localStorage.getItem("username");
 
@@ -37,6 +60,7 @@ const WatchPage = () => {
       });
     }
 
+    fetchReactions();
   }, [videoId]);
 
   const handleCommentSubmit = async (e) => {
@@ -44,8 +68,7 @@ const WatchPage = () => {
     if (!newComment.trim() || !currentUser) return;
 
     try {
-//         console.log(newComment, currentUser.userId, videoId)
-      const response = await fetch("http://localhost:8080/post-comment", {
+      const response = await fetch(API_BASE_URL + "/post-comment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -67,6 +90,43 @@ const WatchPage = () => {
     }
   };
 
+  const handleReaction = async (reactionType) => {
+    try {
+      if (reactionType === 'like') {
+        setLikes(likes + 1);
+      } else {
+        setDislikes(dislikes + 1);
+      }
+
+      const response = await fetch(API_BASE_URL + "/get-reaction", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          video_id: videoId,
+          reaction_type: reactionType
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update reaction");
+      }
+
+      const data = await response.json();
+      setLikes(data.likes);
+      setDislikes(data.dislikes);
+
+    } catch (error) {
+      console.error("Error handling reaction:", error);
+      if (reactionType === 'like') {
+        setLikes(likes + 1);
+      } else {
+        setDislikes(dislikes + 1);
+      }
+    }
+  };
+
   if (!selectedVideo) return <div className="text-white p-10">Loading...</div>;
 
   return (
@@ -77,6 +137,29 @@ const WatchPage = () => {
         <h2 className="text-2xl font-bold mt-4">{selectedVideo.videoTitle}</h2>
         <p className="text-gray-400 mt-2">{selectedVideo.videoDescription}</p>
         <p className="text-sm text-gray-500 mt-2">Uploaded by: {selectedVideo.uploadedBy?.username}</p>
+
+        {/* Like/Dislike Buttons */}
+        <div className="flex items-center gap-4 mt-4">
+          <button
+            onClick={() => handleReaction('like')}
+            className={`flex items-center gap-1 px-3 py-1 rounded-full ${userReaction === 'like' ? 'bg-blue-600 text-white' : 'bg-gray-700 hover:bg-gray-600'}`}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
+            </svg>
+            <span>{likes}</span>
+          </button>
+
+          <button
+            onClick={() => handleReaction('dislike')}
+            className={`flex items-center gap-1 px-3 py-1 rounded-full ${userReaction === 'dislike' ? 'bg-red-600 text-white' : 'bg-gray-700 hover:bg-gray-600'}`}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M16.707 10.293a1 1 0 010 1.414l-6 6a1 1 0 01-1.414 0l-6-6a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l4.293-4.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+            <span>{dislikes}</span>
+          </button>
+        </div>
 
         {/* Comments Section */}
         <div className="mt-8">
