@@ -5,6 +5,7 @@ import Signup from './pages/Signup';
 import HomePage from './pages/HomePage'
 import Profile from './pages/Profile'
 import WatchPage from './pages/WatchPage'
+import History from './pages/History'
 
 function App() {
   return (
@@ -16,6 +17,8 @@ function App() {
         <Route path="/home" element={<HomePage/>} />
         <Route path="/watch/:videoId" element={<WatchPage />} />
         <Route path="/profile/:username" element={<Profile />} />
+        <Route path="/history/:userId" element={<History />} />
+
       </Routes>
     </Router>
   );

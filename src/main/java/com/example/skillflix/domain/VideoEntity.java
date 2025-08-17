@@ -27,6 +27,8 @@ public class VideoEntity {
 
     private int dislikes = 0;
 
+//    private int rating;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uploaded_by_id")  // 'id' in videos refers to users.id
     @JsonIgnoreProperties({"password", "hibernateLazyInitializer", "handler"})

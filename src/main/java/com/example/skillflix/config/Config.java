@@ -5,6 +5,8 @@ import com.example.skillflix.domain.VideoEntity;
 import com.example.skillflix.repository.UserRepository;
 import com.example.skillflix.repository.VideoRepository;
 import com.example.skillflix.services.UserService;
+import com.example.skillflix.services.VideoService;
+import com.example.skillflix.services.impl.VideoServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
