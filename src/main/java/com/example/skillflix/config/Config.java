@@ -27,7 +27,7 @@ public class Config {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173","https://skillflixui.netlify.app")
+                        .allowedOrigins("http://localhost:5173","https://skillflixui.netlify.app"," https://f5d9bbac0861.ngrok-free.app")
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedHeaders("*")
                         .allowCredentials(true);

@@ -3,7 +3,8 @@ name: Deploy React + Spring Boot
 on:
   push:
     branches:
-      - main  # or your default branch
+      - main
+      - cd-test # or your default branch
 
 jobs:
   build-and-deploy:

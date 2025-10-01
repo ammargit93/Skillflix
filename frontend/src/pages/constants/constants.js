@@ -1,2 +1,2 @@
 
-export const API_BASE_URL = 'http://192.168.0.103:8080';
+export const API_BASE_URL = 'https://f5d9bbac0861.ngrok-free.app';
