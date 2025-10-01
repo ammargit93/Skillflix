@@ -3,7 +3,7 @@ name: Deploy React + Spring Boot
 on:
   push:
     branches:
-      - main  # or your default branch
+      - cd-test   # 👈 run only on cd-test branch
 
 jobs:
   build-and-deploy:
@@ -31,7 +31,7 @@ jobs:
         uses: nwtgck/actions-netlify@v2.0.0
         with:
           publish-dir: ./frontend/dist
-          production-branch: main
+          production-branch: cd-test    # 👈 tell Netlify to deploy cd-test
           deploy-message: "Automated deploy from GitHub Actions"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
